@@ -56,8 +56,43 @@ const ProjectEAS = () => {
   const handleSecretImageUpload = (e:any) => {
     const file = e.target.files[0];
     setSecretImage(file);
+  
+    const fr = new FileReader();
+    fr.onload = function (loadEvent) {
+      if (loadEvent.target) {
+        const img = document.createElement("img");
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+  
+          if (!ctx) {
+            console.error("Canvas context not found");
+            return;
+          }
+  
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+  
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          readSecretByte(imageData); // Panggil fungsi readSecretByte di sini
+        };
+        img.src = loadEvent.target.result as string;
+      }
+    };
+  
+    fr.readAsDataURL(file);
   };
-
+  const downloadModifiedImage = () => {
+    if (modifiedImage) {
+      const downloadLink = document.createElement("a");
+      downloadLink.href = modifiedImage;
+      downloadLink.download = "modified_image.png"; // Nama file yang akan diunduh
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
+  };
   const AESAlgorithm = () => {
     setError("");
     if (!key || !message) {
@@ -88,23 +123,23 @@ const ProjectEAS = () => {
     }
   };
 
-  const decryptAES = () => {
+  const decryptAES = (ciphertext:any) => {
     setError("");
-    if (!key || !result) {
+    if (!key || !ciphertext) {
       setError("Key dan ChiperText harus diisi.");
       setResult("");
       return;
     }
-
+  
     if (!validateHex(key)) {
       setError("Key harus dalam format heksadesimal.");
       setResult("");
       return;
     }
-
+  
     try {
       const bytes = CryptoJS.AES.decrypt(
-        { ciphertext: CryptoJS.enc.Hex.parse(result) },
+        { ciphertext: CryptoJS.enc.Hex.parse(ciphertext) },
         CryptoJS.enc.Hex.parse(key),
         {
           mode: CryptoJS.mode.ECB,
@@ -120,20 +155,20 @@ const ProjectEAS = () => {
   };
 
   const hideData = () => {
-    const cover = uploadedImage;
-    if (!cover) {
+    if (!uploadedImage) {
       setError('Cover file not found');
       return;
     }
+    
     const fr = new FileReader();
-
+  
     fr.onload = function(loadEvent) {
       if (loadEvent.target) {
         const img = document.createElement('img');
         img.onload = function() {
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
-
+  
           if (!ctx) {
             console.error('Canvas context not found');
             return;
@@ -142,7 +177,7 @@ const ProjectEAS = () => {
           canvas.width = img.width;
           canvas.height = img.height;
           ctx.drawImage(img, 0, 0);
-
+  
           const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           readByte(result, imageData);
           const newImage = new ImageData(imageData.data, imageData.width, imageData.height);
@@ -153,8 +188,8 @@ const ProjectEAS = () => {
         img.src = loadEvent.target.result as string;
       }
     };
-
-    fr.readAsDataURL(cover);
+  
+    fr.readAsDataURL(uploadedImage);
   };
 
   const decryptSecretImage = () => {
@@ -198,6 +233,7 @@ const ProjectEAS = () => {
   
     fr.readAsDataURL(secretImage);
   };
+  
   
 
 
@@ -288,6 +324,7 @@ const readSecretByte = (imageData: any) => {
             Masukan Pesan
           </label>
           <textarea
+            id="encryption-key"
             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-black"
             value={message}
             placeholder="Enter message to encrypt/decrypt"
@@ -383,6 +420,14 @@ const readSecretByte = (imageData: any) => {
           <div className="flex items-center justify-center w-full">
             <div className="w-full h-64 border-2 border-gray-300 bg-gray-50 border-dashed rounded-lg bg-cover bg-center">
               <img src={modifiedImage} alt="Modified Image" style={{ maxWidth: "100%", maxHeight: "100%" }} />
+              <div className="flex justify-center">
+                <button
+                  className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded ml-2 transition duration-300 ease-in-out transform hover:scale-105"
+                  onClick={downloadModifiedImage}
+                >
+                  Download Gambar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -411,6 +456,7 @@ const readSecretByte = (imageData: any) => {
           <label className="block text-sm font-medium mb-2">Kunci (16-byte hexadecimal)</label>
           <div className="flex items-center">
             <textarea
+              id="decryption-key"
               className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-black"
               value={secretKey}
               placeholder="Masukkan Kunci dalam format heksadesimal 16-byte"
