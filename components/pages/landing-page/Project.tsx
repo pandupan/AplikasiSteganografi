@@ -15,8 +15,15 @@ const ProjectEAS = () => {
 
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
+  const [modifiedImage, setModifiedImage] = useState("");
 
-  const validateHex = (input: string) => /^[0-9A-Fa-f]+$/g.test(input);
+  const [secretImage, setSecretImage] = useState(null);
+  const [secretKey, setSecretKey] = useState("");
+  const [secretError, setSecretError] = useState("");
+  const [decryptedMessage, setDecryptedMessage] = useState("");
+  
+
+  const validateHex = (input:any) => /^[0-9A-Fa-f]+$/g.test(input);
 
   const generateRandomMessage = () => {
     const randomMessages = [
@@ -32,17 +39,23 @@ const ProjectEAS = () => {
 
   useEffect(() => {
     generateRandomMessage();
-  }, []); // Run only once on component mount to set initial random message
+  }, []);
 
   const generateKey = () => {
     const newKey = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
     setKey(newKey);
     setError("");
   };
-  const handleImageUpload = (e: any) => {
+
+  const handleImageUpload = (e:any) => {
     const file = e.target.files[0];
     setUploadedImage(file);
     setIsImageUploaded(true);
+  };
+
+  const handleSecretImageUpload = (e:any) => {
+    const file = e.target.files[0];
+    setSecretImage(file);
   };
 
   const AESAlgorithm = () => {
@@ -106,6 +119,146 @@ const ProjectEAS = () => {
     }
   };
 
+  const hideData = () => {
+    const cover = uploadedImage;
+    if (!cover) {
+      setError('Cover file not found');
+      return;
+    }
+    const fr = new FileReader();
+
+    fr.onload = function(loadEvent) {
+      if (loadEvent.target) {
+        const img = document.createElement('img');
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+
+          if (!ctx) {
+            console.error('Canvas context not found');
+            return;
+          }
+          
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          readByte(result, imageData);
+          const newImage = new ImageData(imageData.data, imageData.width, imageData.height);
+          ctx.putImageData(newImage, 0, 0);
+          const modifiedImageData = canvas.toDataURL();
+          setModifiedImage(modifiedImageData);
+        };
+        img.src = loadEvent.target.result as string;
+      }
+    };
+
+    fr.readAsDataURL(cover);
+  };
+
+  const decryptSecretImage = () => {
+    setSecretError("");
+    if (!secretKey || !secretImage) {
+      setSecretError("Kunci dan Gambar Rahasia harus diisi.");
+      setDecryptedMessage("");
+      return;
+    }
+  
+    if (!validateHex(secretKey)) {
+      setSecretError("Kunci harus dalam format heksadesimal.");
+      setDecryptedMessage("");
+      return;
+    }
+  
+    const fr = new FileReader();
+  
+    fr.onload = function (loadEvent) {
+      if (loadEvent.target) {
+        const img = document.createElement("img");
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+  
+          if (!ctx) {
+            console.error("Canvas context not found");
+            return;
+          }
+  
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+  
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          readSecretByte(imageData); // Panggil fungsi readSecretByte di sini
+        };
+        img.src = loadEvent.target.result as string;
+      }
+    };
+  
+    fr.readAsDataURL(secretImage);
+  };
+  
+
+
+const readSecretByte = (imageData: any) => {
+  console.log("Reading secret byte...");
+  let message = "";
+  let index = 0;
+  let bits = 0;
+
+  for (let i = 0; i < imageData.data.length; i += 4) {
+      bits = (bits << 2) | (imageData.data[i] & 0x03);
+      index++;
+
+      if (index === 4) {
+          if (bits === 0) {
+              break;
+          }
+          message += String.fromCharCode(bits);
+          index = 0;
+          bits = 0;
+      }
+  }
+
+  console.log("Decrypted message:", message);
+  setDecryptedMessage(message);
+  
+};
+
+
+  const readByte = (secret: any, imageData: any) => {
+    if (!secret) return;
+    let newIndex = 0;
+
+    for (let i = 0, length = secret.length; i < length; i++) {
+      let asciiCode = secret.charCodeAt(i);
+      let first2bit = asciiCode & 0x03;
+      let first4bitMiddle = (asciiCode & 0x0C) >> 2;
+      let first6bitMiddle = (asciiCode & 0x30) >> 4;
+      let first8bitMiddle = (asciiCode & 0xC0) >> 6;
+
+      replaceByte(imageData, first2bit, newIndex);
+      replaceByte(imageData, first4bitMiddle, newIndex);
+      replaceByte(imageData, first6bitMiddle, newIndex);
+      replaceByte(imageData, first8bitMiddle, newIndex);
+
+      newIndex++;
+    }
+  };
+
+  const replaceByte = (imageData:any, bits:any, index:any) => {
+    let byteIndex = index * 4;
+    let byteValue = imageData.data[byteIndex];
+    byteValue = (byteValue & 0xFC) | bits;
+    imageData.data[byteIndex] = byteValue;
+  };
+
+  useEffect(() => {
+    AESAlgorithm(); // Enkripsi otomatis setiap kali pesan atau kunci berubah
+  }, [message, key]);
+  
+  
   return (
     <div
       id="projects"
@@ -128,6 +281,7 @@ const ProjectEAS = () => {
           <span className="font-bold text-blue-500">Encryption</span>
         </motion.span>
       </h1>
+      {/* CARD 1 */}
       <div className="p-6 w-1/2 max-w-full mx-auto bg-blue-300 bg-opacity-25 backdrop-filter backdrop-blur-lg border border-blue-300 rounded-lg shadow-xl">
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">
@@ -168,6 +322,16 @@ const ProjectEAS = () => {
             </button>
           </div>
           {error && <p className="text-red-500 mt-2">{error}</p>}
+                      <div className="flex flex-col items-center justify-center">
+              <label className="block text-sm font-medium mb-2">Hasil Enkripsi</label>
+              <textarea
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-black"
+                value={result}
+                placeholder="Hasil Enkripsi akan muncul di sini"
+                readOnly
+                style={{ height: "100px" }}
+              />
+            </div>
         </div>
         <div className="flex flex-row justify-center items-center">
           <div className="flex items-center justify-center w-full">
@@ -218,47 +382,61 @@ const ProjectEAS = () => {
           </div>
           <div className="flex items-center justify-center w-full">
             <div className="w-full h-64 border-2 border-gray-300 bg-gray-50 border-dashed rounded-lg bg-cover bg-center">
-            <div className={`flex flex-col items-center justify-center pt-5 pb-6 ${isImageUploaded ? 'hidden' : ''}`}>
-                <svg
-                  className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 16"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                  />
-                </svg>
-                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                  <span className="font-semibold">Click to upload</span> or drag
-                  and drop
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  SVG, PNG, JPG or GIF (MAX. 800x400px)
-                </p>
-              </div>
+              <img src={modifiedImage} alt="Modified Image" style={{ maxWidth: "100%", maxHeight: "100%" }} />
             </div>
           </div>
         </div>
 
         <div className="flex justify-center">
           <button
-            className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded mr-2 transition duration-300 ease-in-out transform hover:scale-105"
-            onClick={AESAlgorithm}
-          >
-            Encrypt
-          </button>
-          <button
             className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded ml-2 transition duration-300 ease-in-out transform hover:scale-105"
-            onClick={decryptAES}
+            onClick={hideData}
           >
-            Decrypt
+            Hide Data
           </button>
+        </div>
+      </div>
+      {/* CARD 2 */}
+      <div className="p-6 w-1/2 max-w-full mx-auto bg-blue-300 bg-opacity-25 backdrop-filter backdrop-blur-lg border border-blue-300 rounded-lg shadow-xl mt-8">
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Upload Gambar Rahasia</label>
+          <input
+            title="gambarrahasia"
+            type="file"
+            className="p-2 border border-gray-300 rounded-md focus:outline-none focus:border-black"
+            onChange={handleSecretImageUpload}
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Kunci (16-byte hexadecimal)</label>
+          <div className="flex items-center">
+            <textarea
+              className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-black"
+              value={secretKey}
+              placeholder="Masukkan Kunci dalam format heksadesimal 16-byte"
+              onChange={(e) => setSecretKey(e.target.value)}
+              style={{ height: "100px" }}
+            />
+          </div>
+          {secretError && <p className="text-red-500 mt-2">{secretError}</p>}
+        </div>
+        <div className="flex justify-center">
+          <button
+            className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded mr-2 transition duration-300 ease-in-out transform hover:scale-105"
+            onClick={decryptSecretImage}
+          >
+            Dekripsi
+          </button>
+        </div>
+        <div className="mt-4">
+          <label className="block text-sm font-medium mb-2">Pesan Rahasia</label>
+          <textarea
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-black"
+            value={decryptedMessage}
+            placeholder="Pesan Rahasia yang didekripsi akan muncul di sini"
+            readOnly
+            style={{ height: "100px" }}
+          />
         </div>
       </div>
     </div>

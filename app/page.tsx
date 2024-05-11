@@ -4,6 +4,7 @@ import Contact from '@/components/pages/landing-page/Contact'
 import Hero from '@/components/pages/landing-page/Hero'
 
 import Service from '@/components/pages/landing-page/Service'
+import IniTest from '@/components/pages/landing-page/text'
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
             />
             <About/>
             <Service/>
+            {/* <IniTest/> */}
             <Project/>
             <Contact/>
       </>
