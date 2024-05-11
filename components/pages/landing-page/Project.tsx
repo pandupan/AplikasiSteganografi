@@ -24,17 +24,6 @@ const Test = () => {
     }
   }, [plaintext]); 
 
-  const generateRandomPlaintext = () => {
-    const randomMessages = [
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    ];
-    const randomIndex = Math.floor(Math.random() * randomMessages.length);
-    setPlaintext(randomMessages[randomIndex]);
-  };
 
   const generateSecretKey = () => {
     const newKey = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
@@ -190,99 +179,100 @@ const Test = () => {
   };
 
   return (
-    <div className="bg-gray-100 p-8 rounded-lg shadow-lg min-h-screen">
-      <div className="p-6 w-1/2 max-w-full mx-auto bg-blue-300 bg-opacity-25 backdrop-filter backdrop-blur-lg border border-blue-300 rounded-lg shadow-xl">
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Plaintext</label>
+<div className="flex flex-col gap-10 justify-center items-center">
+  {/* Card 1 */}
+  <div className="bg-gray-100 p-8 rounded-lg shadow-lg w-1/2 mr-4">
+    <div className="mb-8">
+      <h2 className="text-xl font-semibold mb-4">Encryption</h2>
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-2">Plaintext</label>
+        <textarea
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-black"
+          value={plaintext}
+          placeholder="Enter message to encrypt"
+          onChange={(e) => setPlaintext(e.target.value)}
+          style={{ height: "100px" }}
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-2">Secret Key (16-byte hexadecimal)</label>
+        <div className="flex items-center">
           <textarea
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-black"
-            value={plaintext}
-            placeholder="Enter message to encrypt"
-            onChange={(e) => setPlaintext(e.target.value)}
+            className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-black"
+            value={secretKey}
+            placeholder="Enter Key in 16-byte hexadecimal format"
+            onChange={(e) => {
+              setSecretKey(e.target.value);
+              if (!validateHex(e.target.value)) {
+                console.error("Key must be in hexadecimal format.");
+              }
+            }}
             style={{ height: "100px" }}
+            readOnly
           />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Secret Key (16-byte hexadecimal)</label>
-          <div className="flex items-center">
-            <textarea
-              className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-black"
-              value={secretKey}
-              placeholder="Enter Key in 16-byte hexadecimal format"
-              onChange={(e) => {
-                setSecretKey(e.target.value);
-                if (!validateHex(e.target.value)) {
-                  console.error("Key must be in hexadecimal format.");
-                }
-              }}
-              style={{ height: "100px" }}
-              readOnly
-            />
-            <button
-              className="bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded ml-2 transition duration-300 ease-in-out transform hover:scale-105"
-              onClick={generateSecretKey}
-            >
-              Generate Key
-            </button>
-          </div>
-        </div>
-        <div className="flex justify-center">
           <button
-            className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded mr-2 transition duration-300 ease-in-out transform hover:scale-105"
-            onClick={lsbEncrypt}
+            className="bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded ml-2 transition duration-300 ease-in-out transform hover:scale-105"
+            onClick={generateSecretKey}
           >
-            Encrypt & Hide in Image
+            Generate Key
           </button>
         </div>
       </div>
-      <form className="mb-4">
-        <label htmlFor="lsbSecretData" className="block mb-2">Enter secret data:</label>
-        <input id="lsbSecretData" type="text" value={lsbSecretData} onChange={(e) => setLsbSecretData(e.target.value)} placeholder="Enter secret data" className="border border-gray-300 rounded-md py-2 px-3 mb-2" />
-        <br />
-        <label htmlFor="lsbCoverImage" className="block mb-2">Choose a cover image:</label>
-        <input id="lsbCoverImage" type="file" onChange={(e) => setLsbCoverImage(e.target.files?.[0] || null)} accept="image/*" className="mb-2" />
-        <button type="button" onClick={lsbEncrypt} className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Hide Data into Image</button>
-      </form>
-      {lsbHiddenImage && (
-        <div>
-          <img src={lsbHiddenImage} alt="Hidden Image" className="mt-4 mb-2" />
-          <button type="button" onClick={handleDownloadImage} className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">Download Hidden Image</button>
-        </div>
-      )}
-      <form>
-        <label htmlFor="hiddenImage" className="block mt-4 mb-2">Select an image with hidden data:</label>
-        <input id="hiddenImage" type="file" onChange={handleLoadImage} accept="image/*" className="mb-2" />
-        <button type="button" onClick={handleLoadImage} className="bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600">Load Hidden Image</button>
-      </form>
-      {lsbDecodedData && (
-        <div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Decryption Key (16-byte hexadecimal)</label>
-            <input
-              className="border border-gray-300 rounded-md py-2 px-3 mb-2"
-              type="text"
-              value={decryptionKey}
-              placeholder="Enter Key in 16-byte hexadecimal format"
-              onChange={(e) => {
-                setDecryptionKey(e.target.value);
-                if (!validateHex(e.target.value)) {
-                  console.error("Key must be in hexadecimal format.");
-                }
-              }}
-            />
-          </div>
-          <h2 className="mt-4 mb-2">Decoded Message:</h2>
-          <p>{lsbDecodedData}</p>
-          {error && <p className="text-red-500">{error}</p>}
-          <button
-            className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded mt-2 transition duration-300 ease-in-out transform hover:scale-105"
-            onClick={decryptAES}
-          >
-            Decrypt Message
-          </button>
-        </div>
-      )}
     </div>
+    <form className="mb-4">
+      <label htmlFor="lsbSecretData" className="block mb-2">Enter secret data:</label>
+      <input id="lsbSecretData" type="text" value={lsbSecretData} onChange={(e) => setLsbSecretData(e.target.value)} placeholder="Enter secret data" className="border border-gray-300 rounded-md py-2 px-3 mb-2" />
+      <br />
+      <label htmlFor="lsbCoverImage" className="block mb-2">Choose a cover image:</label>
+      <input id="lsbCoverImage" type="file" onChange={(e) => setLsbCoverImage(e.target.files?.[0] || null)} accept="image/*" className="mb-2" />
+      <button type="button" onClick={lsbEncrypt} className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Hide Data into Image</button>
+    </form>
+    {lsbHiddenImage && (
+      <div>
+        <img src={lsbHiddenImage} alt="Hidden Image" className="mt-4 mb-2" width={200} height={200} />
+        <button type="button" onClick={handleDownloadImage} className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">Download Hidden Image</button>
+      </div>
+    )}
+  </div>
+  {/* Card 2 */}
+  <div className="bg-gray-100 p-8 rounded-lg shadow-lg w-1/2">
+    <h2 className="text-xl font-semibold mb-4">Decryption</h2>
+    <form>
+      <label htmlFor="hiddenImage" className="block mt-4 mb-2">Select an image with hidden data:</label>
+      <input id="hiddenImage" type="file" onChange={handleLoadImage} accept="image/*" className="mb-2" />
+      <button type="button" onClick={handleLoadImage} className="bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600">Load Hidden Image</button>
+    </form>
+    {lsbDecodedData && (
+      <div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Decryption Key (16-byte hexadecimal)</label>
+          <input
+            className="border border-gray-300 rounded-md py-2 px-3 mb-2"
+            type="text"
+            value={decryptionKey}
+            placeholder="Enter Key in 16-byte hexadecimal format"
+            onChange={(e) => {
+              setDecryptionKey(e.target.value);
+              if (!validateHex(e.target.value)) {
+                console.error("Key must be in hexadecimal format.");
+              }
+            }}
+          />
+        </div>
+        <h2 className="mt-4 mb-2">Decoded Message:</h2>
+        <p>{lsbDecodedData}</p>
+        {error && <p className="text-red-500">{error}</p>}
+        <button
+          className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded mt-2 transition duration-300 ease-in-out transform hover:scale-105"
+          onClick={decryptAES}
+        >
+          Decrypt Message
+        </button>
+      </div>
+    )}
+  </div>
+</div>
+
   );
 };
 
