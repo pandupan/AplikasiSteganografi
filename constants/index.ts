@@ -7,7 +7,7 @@ export const contacts = [
   {
     id: 'email',
     Icon: MdEmail,
-    value: '227006017@student.unsil.ac.id'
+    value: 'Steganografi@xxxxx.xx.xx'
   },
   {
     id: 'phone',
@@ -17,12 +17,12 @@ export const contacts = [
   {
     id: 'address',
     Icon: MdLocationPin,
-    value: 'Jl Cikoneng, RT/RW 004/003, sukamajukaler, indihiang'
+    value: 'Universitas Siliwangi'
   },
   {
     id: 'instagram',
     Icon: BiLogoInstagramAlt,
-    value: '@techdigi.id',
+    value: '@steganografi',
     link: 'https://www.instagram.com/pandupan__'
   },
 ];

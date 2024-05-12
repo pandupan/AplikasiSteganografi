@@ -52,11 +52,11 @@ const Header = () => {
                 className="sm:ml-4 sm:p-4 mr-2 ml-1 p-2 w-[50px] h-[35px] sm:w-auto sm:h-auto "
               />
               <div className='ml-2 sm:ml-8 text-sm sm:tracking-[2.5px]' style={{color:`${textColor}`}}>
-                <h2 className='font-bold'>AES Algorithm</h2>            
+                <h2 className='font-bold'>Kriptografi Piksel</h2>            
               </div>
             </div>
             <div className='ml-2 sm:ml-4 text-base sm:tracking-[1.5px]' style={{color:`${textColor}`}}>
-              <h2 className='font-semibold italic '>&quot;Wujudkan Keamanan Digital!&quot;</h2>             
+              <h2 className='font-semibold italic '>&quot;Keamanan adalah Kunci.&quot;</h2>             
             </div>
           </div>
         </Link>

@@ -7,8 +7,8 @@ import Header from '../components/layout/Header'
 const montserrat = Montserrat({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Enkripsi Modern KI',
-  description: 'Pembuatan aplikasi enkripsi modern untuk memenuhi salah satu mata kuliah keamanan informasi',
+  title: 'Keamanan Informasi',
+  description: 'Steganografi LSB dengan Metode AES',
 }
 
 export default function RootLayout({

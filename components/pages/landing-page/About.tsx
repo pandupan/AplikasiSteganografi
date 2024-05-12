@@ -21,17 +21,17 @@ const About = () => {
           <Carousel slideInterval={5000} >
             <img
               alt="..."
-              src="https://i.ibb.co/027vYpN/woman-standing-working-her-tablet.jpg"
+              src="https://i.postimg.cc/rwJ0C3V6/Whats-App-Image-2024-05-12-at-07-37-03.jpg"
               className='object-contain rounded-md'
             />
             <img
               alt="..."
-              src="https://i.ibb.co/HFQJ56N/premium-photo-1674582744985-19097212179b.jpg"
+              src="https://i.postimg.cc/YqVmCZrM/Whats-App-Image-2024-05-12-at-07-37-03-1.jpg"
               className='object-contain rounded-md'
             />
             <img
               alt="..."
-              src="https://i.ibb.co/GFKVkzq/premium-photo-1681487746049-c39357159f69.jpg"
+              src="https://i.postimg.cc/s2d67BgH/Whats-App-Image-2024-05-12-at-07-37-01-3.jpg"
               className='object-contain rounded-md'
             />
           </Carousel>
@@ -53,15 +53,19 @@ const About = () => {
                 whileInView={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                About <span className='font-bold text-blue-500'>AES Algorithm</span>
+                About <span className='font-bold text-blue-500'>AES ALGORITHM & LSB METHOD</span>
               </motion.span>
             </h1>
             <div
               className="max-w-[800px] mx-auto p-6 sm:px-8 sm:py-12 rounded-md bg-white border border-gray-600 mt-4 md:[90px] lg:mt-[120px]"
             >
-              <h1 className="text-xl sm:text-2xl tracking-widest uppercase font-bold"> Advanced Encryption Standard.</h1>
+              <h1 className="text-xl sm:text-2xl tracking-widest uppercase font-bold">Least Significant Bit</h1>
               <p className="sm:text-lg max-w-2xl mt-4 mb-6 text-left sm:text-justify">
-                <span className="text-colorfull-blue font-semibold">AES</span>  merupakan  algoritma kriptografi yang digunakan secara luas untuk melakukan enkripsi dan dekripsi data.<span className="text-blue-500 font-semibold">  Dengan mengambil blok data dan mengubahnya menjadi blok data terenkripsi menggunakan kunci tertentu. </span>AES memiliki beberapa langkah operasi yang disebut SubBytes, ShiftRows, MixColumns, dan AddRoundKey. Proses enkripsi dan dekripsi melibatkan pengulangan langkah-langkah ini sejumlah kali, dengan jumlah pengulangan tergantung pada panjang kunci yang digunakan.
+                <span className="text-colorfull-blue font-semibold">LSB</span>  Merupakan metode steganografi yang umum digunakan untuk menyembunyikan pesan rahasia dalam gambar.<span className="text-blue-500 font-semibold">  Dalam metode ini, pesan disisipkan ke dalam gambar dengan memanfaatkan bit-bit terakhir  yang tidak signifikan dari nilai piksel.</span>Karena perubahan kecil pada nilai piksel umumnya tidak terlihat oleh mata manusia, pesan rahasia bisa disembunyikan tanpa mengurangi kualitas visual gambar secara signifikan.
+              </p>
+              <h1 className="text-xl sm:text-2xl tracking-widest uppercase font-bold">Advanced Encryption Standard</h1>
+              <p className="sm:text-lg max-w-2xl mt-4 mb-6 text-left sm:text-justify">
+                <span className="text-colorfull-blue font-semibold">AES</span>  Merupakan algoritma kriptografi yang sering digunakan untuk enkripsi dan dekripsi data. <span className="text-blue-500 font-semibold">   Dalam prosesnya, AES mengubah blok data menjadi blok data terenkripsi menggunakan kunci tertentu.</span>Proses enkripsi dan dekripsi melibatkan serangkaian langkah operasi, seperti SubBytes, ShiftRows, MixColumns, dan AddRoundKey. AES telah menjadi standar yang diakui secara internasional dan sering digunakan dalam berbagai aplikasi untuk melindungi data sensitif.
               </p>
               <Disclosure>              
                 {({open}) => (
@@ -84,7 +88,7 @@ const About = () => {
                 {({ open }) => (
                   <>
                     <Disclosure.Button className="flex w-full justify-between rounded-lg bg-blue-100 px-4 py-2 mb-2 text-left text-base font-medium text-gray-900 hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75">
-                      <span>Efisiensi</span>
+                      <span>Kualitas Visual Gambar</span>
                       <ChevronUpIcon
                         className={`${
                           open ? 'rotate-180 transform' : ''
@@ -92,7 +96,7 @@ const About = () => {
                       />
                     </Disclosure.Button>
                     <Disclosure.Panel className="px-4 pt-4 pb-2 text-base text-gray-500">
-                    Meskipun AES menawarkan tingkat keamanan yang tinggi, itu juga dirancang untuk beroperasi secara efisien pada berbagai platform, termasuk perangkat keras terbatas seperti perangkat seluler dan mikrokontroler. Algoritma ini memiliki implementasi yang relatif sederhana dan dapat dijalankan dengan cepat, memungkinkan enkripsi dan dekripsi data dalam waktu yang singkat, bahkan pada perangkat dengan daya terbatas.
+                    Metode Least Significant Bit (LSB) memungkinkan pengguna akan menyembunyikan pesan dalam gambar tanpa mengurangi kualitas visualnya. Pengguna tetap dapat menikmati gambar dengan jelas dan tanpa gangguan, sementara pesan rahasia tetap tersembunyi dengan aman.
                     </Disclosure.Panel>
                   </>
                 )}
@@ -101,7 +105,7 @@ const About = () => {
                 {({open}) => (
                   <>
                     <Disclosure.Button className="flex w-full justify-between rounded-lg bg-blue-100 px-4 py-2 text-left text-base font-medium text-gray-900 hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75">
-                      <span>Sesuai Standar Internasional</span>
+                      <span>Kombinasi Teknologi </span>
                       <ChevronUpIcon
                         className={`${
                           open ? 'rotate-180 transform' : ''
@@ -109,7 +113,7 @@ const About = () => {
                       />
                     </Disclosure.Button>
                     <Disclosure.Panel className="px-4 pt-4 pb-2 text-base text-gray-500">
-                    AES diadopsi secara luas sebagai standar kriptografi oleh pemerintah, perusahaan, dan organisasi di seluruh dunia. Hal ini memberikan jaminan bahwa data yang dienkripsi dengan AES dapat diakses dan diproses oleh berbagai sistem dan perangkat yang kompatibel dengan standar ini. Keberadaan standar global ini membantu memastikan interoperabilitas dan keamanan data di seluruh dunia.
+                    Gabungan AES dan LSB membentuk solusi yang kuat dan inovatif untuk menyembunyikan pesan dalam gambar. Dengan menggabungkan keamanan tingkat tinggi dari AES dan efisiensi penyembunyian pesan dari LSB, aplikasi ini menawarkan solusi yang seimbang antara keamanan dan kualitas visual gambar yang optimal.
                     </Disclosure.Panel>
                   </>
                 )}

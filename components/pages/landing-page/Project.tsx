@@ -179,7 +179,7 @@ const Test = () => {
   };
 
   return (
-<div className="flex flex-col gap-10 justify-center items-center">
+<div id="projects" className="flex flex-col gap-10 justify-center items-center">
   {/* Card 1 */}
   <div className="bg-gray-100 p-8 rounded-lg shadow-lg w-1/2 mr-4">
     <div className="mb-8">
