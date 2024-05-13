@@ -59,13 +59,13 @@ const About = () => {
             <div
               className="max-w-[800px] mx-auto p-6 sm:px-8 sm:py-12 rounded-md bg-white border border-gray-600 mt-4 md:[90px] lg:mt-[120px]"
             >
-              <h1 className="text-xl sm:text-2xl tracking-widest uppercase font-bold">Least Significant Bit</h1>
-              <p className="sm:text-lg max-w-2xl mt-4 mb-6 text-left sm:text-justify">
-                <span className="text-colorfull-blue font-semibold">LSB</span>  Merupakan metode steganografi yang umum digunakan untuk menyembunyikan pesan rahasia dalam gambar.<span className="text-blue-500 font-semibold">  Dalam metode ini, pesan disisipkan ke dalam gambar dengan memanfaatkan bit-bit terakhir  yang tidak signifikan dari nilai piksel.</span>Karena perubahan kecil pada nilai piksel umumnya tidak terlihat oleh mata manusia, pesan rahasia bisa disembunyikan tanpa mengurangi kualitas visual gambar secara signifikan.
-              </p>
               <h1 className="text-xl sm:text-2xl tracking-widest uppercase font-bold">Advanced Encryption Standard</h1>
               <p className="sm:text-lg max-w-2xl mt-4 mb-6 text-left sm:text-justify">
                 <span className="text-colorfull-blue font-semibold">AES</span>  Merupakan algoritma kriptografi yang sering digunakan untuk enkripsi dan dekripsi data. <span className="text-blue-500 font-semibold">   Dalam prosesnya, AES mengubah blok data menjadi blok data terenkripsi menggunakan kunci tertentu.</span>Proses enkripsi dan dekripsi melibatkan serangkaian langkah operasi, seperti SubBytes, ShiftRows, MixColumns, dan AddRoundKey. AES telah menjadi standar yang diakui secara internasional dan sering digunakan dalam berbagai aplikasi untuk melindungi data sensitif.
+              </p>
+              <h1 className="text-xl sm:text-2xl tracking-widest uppercase font-bold">Least Significant Bit</h1>
+              <p className="sm:text-lg max-w-2xl mt-4 mb-6 text-left sm:text-justify">
+                <span className="text-colorfull-blue font-semibold">LSB</span>  Merupakan metode steganografi yang umum digunakan untuk menyembunyikan pesan rahasia dalam gambar.<span className="text-blue-500 font-semibold">  Dalam metode ini, pesan disisipkan ke dalam gambar dengan memanfaatkan bit-bit terakhir  yang tidak signifikan dari nilai piksel.</span>Karena perubahan kecil pada nilai piksel umumnya tidak terlihat oleh mata manusia, pesan rahasia bisa disembunyikan tanpa mengurangi kualitas visual gambar secara signifikan.
               </p>
               <Disclosure>              
                 {({open}) => (
