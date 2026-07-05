@@ -1,87 +1,75 @@
-# Aplikasi Steganografi 🔐
+# 🔐 Aplikasi Steganografi — Sembunyikan Pesan dalam Gambar
 
-> **Aplikasi penyembunyian pesan dalam gambar menggunakan metode AES-LSB**
+Aplikasi **steganografi** untuk menyembunyikan dan mengekstrak pesan rahasia di dalam media gambar. Menggabungkan konsep steganografi dengan enkripsi Blowfish untuk **keamanan ganda** — pesan dienkripsi dulu, lalu disembunyikan dalam gambar.
 
-**Aplikasi Steganografi** adalah platform web untuk menyembunyikan (*embedding*) dan mengekstrak pesan rahasia ke dalam gambar digital. Menggabungkan **enkripsi AES** untuk keamanan pesan dengan **metode LSB (Least Significant Bit)** untuk menyembunyikan data dalam pixel gambar.
+## ✨ Fitur
 
----
+- **Penyisipan (Embed)** — Sembunyikan teks rahasia ke dalam gambar (PNG/JPG)
+- **Ekstraksi (Extract)** — Baca & dekripsi pesan tersembunyi dari gambar
+- **Enkripsi Blowfish** — Pesan dienkripsi sebelum disisipkan (`blowfish-node`)
+- **Keamanan Ganda** — Steganografi + Kriptografi = perlindungan maksimal
+- **UI Modern** — Antarmuka intuitif dengan animasi
 
-## ✨ Fitur Utama
-
-- **🔒 Enkripsi AES** — Pesan dienkripsi dengan algoritma AES sebelum disembunyikan
-- **🖼️ Steganografi LSB** — Penyembunyian data dalam bit terendah pixel gambar
-- **📤 Embedding** — Sembunyikan pesan rahasia ke dalam gambar
-- **📥 Ekstraksi** — Baca pesan tersembunyi dari gambar stego
-- **🎨 UI Modern** — Antarmuka dengan Tailwind CSS + Flowbite
-- **⚡ Animasi** — Transisi halus dengan Framer Motion
-- **📱 Responsive** — Tampilan optimal di semua perangkat
+### Cara Kerja
+1. **Enkripsi** → Pesan dienkripsi menggunakan algoritma Blowfish
+2. **Penyisipan** → Hasil enkripsi disembunyikan ke dalam pixel gambar (LSB)
+3. **Ekstraksi** → Pesan diekstrak dari gambar
+4. **Dekripsi** → Pesan didekripsi kembali ke teks asli
 
 ## 🛠️ Tech Stack
 
-- **Framework:** Next.js 14 (App Router)
-- **Bahasa:** TypeScript
-- **UI:** Tailwind CSS 3, Flowbite React, Headless UI
-- **Kriptografi:** crypto-js (AES), blowfish-node
-- **Animasi:** Framer Motion
-- **Notifikasi:** React Toastify
-- **Ikon:** Heroicons
+| Kategori | Teknologi |
+|----------|-----------|
+| **Framework** | Next.js (App Router) |
+| **Language** | TypeScript |
+| **Styling** | Tailwind CSS |
+| **Enkripsi** | Blowfish (`blowfish-node`) |
+| **UI** | shadcn/ui, Headless UI |
+| **Icons** | Heroicons |
 
----
+## 📁 Struktur Proyek
 
-## 🚀 Cara Install & Jalankan
+```
+app/
+├── page.tsx                  # Landing page
+├── layout.tsx                # Root layout
+└── globals.css               # Global styles
 
-### Prasyarat
-- Node.js 18+
+components/
+├── layout/
+│   ├── Header.tsx            # Navigasi
+│   └── Footer.tsx
+├── lib/
+│   └── animate.ts            # Animasi utility
+└── pages/landing-page/
+    ├── Hero.tsx              # Hero section
+    ├── About.tsx             # Penjelasan steganografi
+    ├── Project.tsx           # Demo/tools
+    ├── Service.tsx           # Layanan
+    └── Contact.tsx           # Kontak
 
-### Langkah
+constants/index.ts            # Data statis
+
+public/images/
+├── hero-section1.png         # Gambar hero
+├── hero.jpg                  # Hero background
+├── secure.jpg                # Ilustrasi keamanan
+└── logo.png                  # Logo aplikasi
+```
+
+## 🚀 Cara Menjalankan
+
 ```bash
-# Clone repositori
-git clone https://github.com/pandupan/AplikasiSteganografi.git
-cd AplikasiSteganografi
-
-# Install dependencies
 npm install
-
-# Jalankan development server
 npm run dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000) di browser.
-
----
-
-## 📁 Struktur Folder
-
-```
-AplikasiSteganografi/
-├── app/
-│   ├── page.tsx              # Halaman utama
-│   ├── layout.tsx            # Layout root
-│   └── globals.css           # Global styles
-├── components/
-│   ├── layout/
-│   │   ├── Header.tsx        # Navigasi
-│   │   └── Footer.tsx        # Footer
-│   ├── lib/
-│   │   └── animate.ts        # Animasi helper
-│   └── pages/
-│       └── landing-page/     # Komponen landing page
-│           ├── Hero.tsx
-│           ├── About.tsx
-│           ├── Service.tsx
-│           ├── Project.tsx
-│           └── Contact.tsx
-├── constants/
-│   └── index.ts              # Konstanta & data kontak
-├── public/
-│   └── images/
-└── package.json
-```
+Buka [http://localhost:3000](http://localhost:3000).
 
 ## 📄 Lisensi
 
-**MIT License**
+MIT License
 
 ---
 
-> Dibuat oleh [Pandu Pangestu](https://github.com/pandupan) — Proyek steganografi untuk keamanan dan privasi data.
+> Dibuat oleh [Pandu Pangestu](https://github.com/pandupan)
